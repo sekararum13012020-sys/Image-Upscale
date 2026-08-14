@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HD Enhancer Pro - Penjernih Foto AI</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-slate-950 text-slate-100 font-['Plus_Jakarta_Sans'] min-h-screen flex flex-col justify-between antialiased selection:bg-cyan-500 selection:text-white">
+
+  <!-- Header / Navbar -->
+  <header class="border-b border-slate-800 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50 py-4 px-4 sm:px-8">
+    <div class="max-w-5xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-cyan-500/20">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight tracking-wide text-white">HD Enhance<span class="text-cyan-400">.AI</span></h1>
+          <p class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">Image Upscaler Pro</p>
+        </div>
+      </div>
+      <span class="bg-slate-800 border border-slate-700 text-xs px-3 py-1 rounded-full text-slate-300 font-semibold hidden sm:inline-block">
+        <i class="fa-solid fa-bolt text-yellow-400 mr-1"></i> Gratis & Cepat
+      </span>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto w-full px-4 py-8 flex-grow space-y-8">
+
+    <!-- Input Section -->
+    <section class="bg-slate-900/80 border border-slate-800 p-6 rounded-3xl shadow-2xl relative overflow-hidden">
+      
+      <!-- Input Mode Switcher (Galeri vs URL) -->
+      <div class="flex bg-slate-950/80 p-1.5 rounded-2xl border border-slate-800/80 mb-6 max-w-md mx-auto">
+        <button id="modeGalleryBtn" onclick="switchInputMode('gallery')" class="flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md">
+          <i class="fa-solid fa-image"></i>
+          <span>Galeri / File</span>
+        </button>
+        <button id="modeUrlBtn" onclick="switchInputMode('url')" class="flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2 text-slate-400 hover:text-white">
+          <i class="fa-solid fa-link"></i>
+          <span>URL Gambar</span>
+        </button>
+      </div>
+
+      <!-- Mode 1: Upload File/Galeri -->
+      <div id="galleryInputArea" class="space-y-4">
+        <div id="dropZone" class="border-2 border-dashed border-slate-700 hover:border-cyan-500 bg-slate-950/40 rounded-2xl p-8 text-center cursor-pointer transition duration-300 flex flex-col items-center justify-center group">
+          <input type="file" id="fileInput" accept="image/*" class="hidden" />
+          <div class="w-14 h-14 bg-slate-800 rounded-full flex items-center justify-center text-cyan-400 text-2xl mb-3 group-hover:scale-110 transition duration-300">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+          </div>
+          <p class="text-sm font-bold text-slate-200">Klik untuk pilih gambar dari Galeri</p>
+          <p class="text-xs text-slate-500 mt-1">Atau tarik file foto ke sini (PNG, JPG, WEBP)</p>
+        </div>
+      </div>
+
+      <!-- Mode 2: Input URL Gambar -->
+      <div id="urlInputArea" class="hidden space-y-4">
+        <div class="flex items-center gap-2 bg-slate-950 p-2 rounded-2xl border border-slate-800 focus-within:border-cyan-500 transition">
+          <i class="fa-solid fa-globe text-slate-500 text-lg ml-3"></i>
+          <input 
+            type="text" 
+            id="urlInput" 
+            placeholder="Tempel tautan/URL gambar di sini (misal: https://...)" 
+            class="w-full bg-transparent px-2 py-2 outline-none text-slate-200 font-semibold text-sm placeholder-slate-500"
+          />
+        </div>
+      </div>
+
+      <!-- Preview Image Selected -->
+      <div id="previewBox" class="hidden mt-4 p-3 bg-slate-950 rounded-2xl border border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-3 overflow-hidden">
+          <img id="smallPreview" src="" class="w-12 h-12 object-cover rounded-xl border border-slate-700" />
+          <div class="truncate">
+            <p id="previewName" class="text-xs font-bold text-slate-200 truncate">gambar.jpg</p>
+            <p class="text-[10px] text-cyan-400 font-semibold">Siap diproses</p>
+          </div>
+        </div>
+        <button onclick="clearSelectedImage()" class="text-slate-500 hover:text-red-400 p-2 text-sm transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Quality Selection (HD vs Ultra HD) -->
+      <div class="mt-6 pt-6 border-t border-slate-800/80">
+        <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-3 text-center sm:text-left">Pilih Mode Penjernih:</label>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="relative cursor-pointer">
+            <input type="radio" name="quality" value="hd" checked class="peer hidden" />
+            <div class="p-3.5 rounded-2xl border-2 border-slate-800 peer-checked:border-cyan-500 peer-checked:bg-cyan-500/10 text-center transition bg-slate-950/60">
+              <span class="font-extrabold text-sm block text-slate-200 peer-checked:text-cyan-400"><i class="fa-solid fa-wand-magic mr-1"></i> HD Mode</span>
+              <span class="text-[10px] text-slate-400 font-medium">Standar (Lebih Cepat)</span>
+            </div>
+          </label>
+          <label class="relative cursor-pointer">
+            <input type="radio" name="quality" value="ultrahd" class="peer hidden" />
+            <div class="p-3.5 rounded-2xl border-2 border-slate-800 peer-checked:border-blue-500 peer-checked:bg-blue-500/10 text-center transition bg-slate-950/60">
+              <span class="font-extrabold text-sm block text-slate-200 peer-checked:text-blue-400"><i class="fa-solid fa-gem mr-1"></i> Ultra HD</span>
+              <span class="text-[10px] text-slate-400 font-medium">Kualitas Maksimal</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button 
+        id="processBtn" 
+        onclick="processImage()" 
+        class="mt-6 w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold py-3.5 rounded-2xl shadow-lg shadow-cyan-500/20 transition-all duration-200 flex items-center justify-center gap-2 text-sm sm:text-base active:scale-[0.99]">
+        <i class="fa-solid fa-bolt"></i>
+        <span>Jernihkan Gambar Sekarang</span>
+      </button>
+
+    </section>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="hidden text-center py-12 space-y-4">
+      <div class="inline-block relative">
+        <div class="w-16 h-16 border-4 border-slate-800 border-t-cyan-500 rounded-full animate-spin"></div>
+        <i class="fa-solid fa-wand-magic-sparkles text-cyan-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm"></i>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-200 text-base" id="loadingStatusText">Sedang Memproses Gambar...</h3>
+        <p class="text-xs text-slate-400 mt-1">Mohon tunggu beberapa detik, AI sedang meningkatkan resolusi foto kamu.</p>
+      </div>
+    </div>
+
+    <!-- Error Box -->
+    <div id="errorState" class="hidden bg-red-500/10 border border-red-500/30 p-4 rounded-2xl text-center space-y-1">
+      <p id="errorText" class="text-red-400 font-bold text-xs sm:text-sm">Terjadi kesalahan.</p>
+    </div>
+
+    <!-- RESULT SECTION (Compare Slider: Sebelum vs Sesudah) -->
+    <section id="resultSection" class="hidden space-y-4">
+      <div class="flex items-center justify-between px-1">
+        <h2 class="font-extrabold text-lg text-slate-100 flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-cyan-400"></i> Hasil Perbandingan
+        </h2>
+        <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
+          <i class="fa-solid fa-check mr-1"></i> Selesai
+        </span>
+      </div>
+
+      <!-- Before After Slider Container -->
+      <div class="relative w-full overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 shadow-2xl select-none" id="comparisonContainer">
+        
+        <!-- Image After (Sesudah HD) - Base Layer -->
+        <img id="imgAfter" src="" alt="Sesudah" class="w-full h-auto max-h-[75vh] object-contain block mx-auto pointer-events-none" />
+        
+        <!-- Badge Label Sesudah -->
+        <span class="absolute top-4 right-4 bg-slate-950/70 backdrop-blur-md text-white text-xs font-extrabold px-3 py-1.5 rounded-full border border-white/20 shadow-lg pointer-events-none z-10">
+          Sesudah (HD)
+        </span>
+
+        <!-- Image Before (Sebelum) - Overlay Layer -->
+        <div id="beforeImageWrapper" class="absolute top-0 left-0 bottom-0 w-1/2 overflow-hidden z-10 border-r-2 border-white shadow-2xl">
+          <img id="imgBefore" src="" alt="Sebelum" class="max-w-none h-full object-contain pointer-events-none" />
+          
+          <!-- Badge Label Sebelum -->
+          <span class="absolute top-4 left-4 bg-slate-950/70 backdrop-blur-md text-white text-xs font-extrabold px-3 py-1.5 rounded-full border border-white/20 shadow-lg pointer-events-none">
+            Sebelum
+          </span>
+        </div>
+
+        <!-- Slider Handle / Splitter Icon -->
+        <div id="sliderHandle" class="absolute top-0 bottom-0 left-1/2 -ml-5 w-10 flex items-center justify-center z-20 cursor-ew-resize">
+          <div class="w-10 h-10 rounded-full bg-white text-slate-900 shadow-2xl flex items-center justify-center text-sm font-black border-2 border-slate-300 active:scale-95 transition-transform">
+            <i class="fa-solid fa-left-right text-slate-800"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Download Action -->
+      <div class="pt-2 flex flex-col sm:flex-row gap-3">
+        <a 
+          id="downloadBtn" 
+          href="#" 
+          target="_blank" 
+          download="foto-hd.jpg" 
+          class="flex-1 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-lg shadow-emerald-500/20 text-center text-sm flex items-center justify-center gap-2 transition active:scale-[0.99]">
+          <i class="fa-solid fa-download"></i>
+          <span>Unduh Gambar HD</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 py-4 text-center text-slate-500 text-xs font-semibold">
+    <p>Dibuat dengan ❤️ untuk Penjernih Foto Otomatis</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

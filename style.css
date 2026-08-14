@@ -1,0 +1,24 @@
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #020617;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #020617;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #06b6d4;
+}
+
+/* Memastikan gambar sebelum & sesudah sejajar persis ukurannya */
+#comparisonContainer img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
